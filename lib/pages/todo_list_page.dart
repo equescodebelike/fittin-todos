@@ -2,7 +2,7 @@ import 'package:fittin_todo/models/todo_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../add_page.dart';
+import 'add_page.dart';
 
 class TodoListPage extends StatefulWidget {
   const TodoListPage({super.key});

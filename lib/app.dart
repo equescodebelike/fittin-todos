@@ -1,4 +1,4 @@
-import 'package:fittin_todo/pages/todo_list_page/todo_list_page.dart';
+import 'package:fittin_todo/pages/todo_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
