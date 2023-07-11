@@ -1,41 +1,70 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class TodoModel {
+  final String id;
   final String text;
   final DateTime? deadline;
   final bool done;
   final TextStyle? textStyle; // подумаю как реализовать по-другому
 
+  factory TodoModel.autoId({
+    required String text,
+    DateTime? deadline,
+    bool done = false,
+    TextStyle? textStyle,
+  }) {
+    return TodoModel(
+      id: const Uuid().v4(),
+      text: text,
+      deadline: deadline,
+      done: done,
+      textStyle: textStyle,
+    );
+  }
+
   TodoModel({
+    required this.id,
     required this.text,
     this.deadline,
     this.done = false,
     this.textStyle,
   });
 
+  @override
+  bool operator ==(covariant TodoModel other) {
+    if (identical(this, other)) return true;
+
+    return other.id == id &&
+        other.text == text &&
+        other.deadline == deadline &&
+        other.done == done &&
+        other.textStyle == textStyle;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        text.hashCode ^
+        deadline.hashCode ^
+        done.hashCode ^
+        textStyle.hashCode;
+  }
+
   TodoModel copyWith({
+    String? id,
     String? text,
     DateTime? deadline,
     bool? done,
     TextStyle? textStyle,
   }) {
     return TodoModel(
+      id: id ?? this.id,
       text: text ?? this.text,
       deadline: deadline ?? this.deadline,
       done: done ?? this.done,
       textStyle: textStyle ?? this.textStyle,
     );
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TodoModel &&
-          runtimeType == other.runtimeType &&
-          text == other.text &&
-          deadline == other.deadline &&
-          done == other.done;
-
-  @override
-  int get hashCode => text.hashCode ^ deadline.hashCode ^ done.hashCode;
 }

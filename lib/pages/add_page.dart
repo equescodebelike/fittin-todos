@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class AddPage extends StatefulWidget {
-  final controller;
+  final controller; // убрать в State
   VoidCallback onSave;
 
   AddPage({
@@ -34,7 +34,7 @@ class _AddPageState extends State<AddPage> {
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.maybePop(context);
           },
         ),
         backgroundColor: themeData.colorScheme.background,
@@ -42,7 +42,7 @@ class _AddPageState extends State<AddPage> {
           TextButton(
             onPressed: () {
               widget.onSave();
-              Navigator.of(context).pop();
+              Navigator.of(context).maybePop();
             },
             child: Text(
               'СОХРАНИТЬ',

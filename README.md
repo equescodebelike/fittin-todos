@@ -1,3 +1,5 @@
 # fittin_todo
 
-ToDo App
+## Todo App вопросы и структура проекта
+
+Oh, greetings fellow stranger... Did you miss something here?
