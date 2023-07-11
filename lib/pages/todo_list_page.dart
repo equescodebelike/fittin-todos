@@ -101,19 +101,21 @@ class _TodoListPageState extends State<TodoListPage> {
                     ),
                   ),
                 ),
-                key: UniqueKey(), // key: ValueKey<TodoModel>(_todos[index])
-                onDismissed: (DismissDirection direction) {
-                  if (direction == DismissDirection.endToStart) {
-                    setState(() {
-                      _todos.removeAt(index);
-                    });
-                  } else if (direction == DismissDirection.startToEnd) {
+                confirmDismiss: (direction) async {
+                  if (direction == DismissDirection.startToEnd) {
                     setState(() {
                       _todos[index] = _todos[index].copyWith(
                         done: true,
                       );
                     });
                   }
+                  return direction == DismissDirection.endToStart;
+                },
+                key: ValueKey<TodoModel>(_todos[index]),
+                onDismissed: (_) {
+                  setState(() {
+                    _todos.removeAt(index);
+                  });
                 },
                 child: CheckboxListTile(
                     activeColor: themeData.colorScheme.secondary,
