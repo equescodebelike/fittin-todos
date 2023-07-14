@@ -15,13 +15,17 @@ TodoModel? note;
 
 class _TodoListPageState extends State<TodoListPage> {
   final List<TodoModel> _todos = [];
+  List<TodoModel> get _activeTodos =>
+      _hidden ? _todos : _todos.where((todo) => !todo.done).toList();
   final _controller = TextEditingController();
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-  bool hidden = false;
+  bool _hidden = false;
 
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
+    final todos = _activeTodos;
+    final done = _todos.where((todo) => todo.done).length;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: themeData.colorScheme.background,
@@ -40,16 +44,16 @@ class _TodoListPageState extends State<TodoListPage> {
                 // Выполнено - {кол-во done: true}
                 // И Icon.visibility/off
                 Text(
-                  ('Выполнено - ${_todos.where((todo) => todo.done).length}'),
+                  ('Выполнено - $done'),
                   style: themeData.textTheme.bodyLarge
                       ?.copyWith(color: const Color(0xFFAEAEAE)),
                 ),
                 IconButton(
-                  icon: Icon(hidden ? Icons.visibility_off : Icons.visibility),
+                  icon: Icon(_hidden ? Icons.visibility_off : Icons.visibility),
                   color: themeData.primaryColor,
                   onPressed: () {
                     setState(() {
-                      hidden = !hidden;
+                      _hidden = !_hidden;
                     });
                   },
                 ),
@@ -67,15 +71,15 @@ class _TodoListPageState extends State<TodoListPage> {
           ),
           itemCount: _todos.length,
           itemBuilder: (context, index) {
-            if (_todos[index].done && hidden) {
-              return const SizedBox.shrink();
+            if (_todos[index].done && _hidden) {
+              return const SizedBox.shrink(); // ?
             }
             // Dismissible done: true & removeAt()
             //Сюда Gesture
             return DecoratedBox(
               decoration: BoxDecoration(
                 color: themeData.colorScheme.surface,
-                borderRadius: _buildBorderRadius(index),
+                borderRadius: _buildBorderRadius(index, todos.length),
               ),
               child: Dismissible(
                 background: Container(
@@ -183,7 +187,8 @@ class _TodoListPageState extends State<TodoListPage> {
     Navigator.push(context, route);
   }
 
-  BorderRadius _buildBorderRadius(int index) {
+  BorderRadius _buildBorderRadius(int index, int length) {
+    // fix it
     const radius = Radius.circular(20);
 
     if (_todos.length == 1) {
