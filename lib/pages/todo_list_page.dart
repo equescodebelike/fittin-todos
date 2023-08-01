@@ -19,7 +19,7 @@ class _TodoListPageState extends State<TodoListPage> {
       _hidden ? _todos : _todos.where((todo) => !todo.done).toList();
   final _controller = TextEditingController();
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-  bool _hidden = false;
+  bool _hidden = true;
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +69,8 @@ class _TodoListPageState extends State<TodoListPage> {
             horizontal: 17,
             vertical: 5,
           ),
-          itemCount: _todos.length,
+          itemCount: todos.length,
           itemBuilder: (context, index) {
-            if (_todos[index].done && _hidden) {
-              return const SizedBox.shrink(); // ?
-            }
             // Dismissible done: true & removeAt()
             //Сюда Gesture
             return DecoratedBox(
@@ -108,40 +105,46 @@ class _TodoListPageState extends State<TodoListPage> {
                 confirmDismiss: (direction) async {
                   if (direction == DismissDirection.startToEnd) {
                     setState(() {
-                      _todos[index] = _todos[index].copyWith(
+                      final todoIndex = _todos.indexWhere(
+                        (t) => t.id == todos[index].id,
+                      );
+                      _todos[todoIndex] = todos[index].copyWith(
                         done: true,
                       );
                     });
                   }
                   return direction == DismissDirection.endToStart;
                 },
-                key: ValueKey<TodoModel>(_todos[index]),
+                key: ValueKey<TodoModel>(todos[index]),
                 onDismissed: (_) {
                   setState(() {
-                    _todos.removeAt(index);
+                    final todoIndex = _todos.indexWhere(
+                      (t) => t.id == todos[index].id,
+                    );
+                    _todos.removeAt(todoIndex);
                   });
                 },
                 child: CheckboxListTile(
                     activeColor: themeData.colorScheme.secondary,
                     controlAffinity: ListTileControlAffinity.leading,
-                    value: _todos[index].done,
+                    value: todos[index].done,
                     onChanged: (value) {
                       null;
                     },
                     // Заметки и даты под ними
                     title: Text(
-                      _todos[index].text,
-                      style: _todos[index].done
-                          ? _todos[index].textStyle?.copyWith(
+                      todos[index].text,
+                      style: todos[index].done
+                          ? todos[index].textStyle?.copyWith(
                                 decoration: TextDecoration.lineThrough,
                                 color: const Color(0xFFAEAEAE),
                               )
-                          : _todos[index].textStyle,
+                          : todos[index].textStyle,
                     ),
-                    subtitle: _todos[index].deadline != null
+                    subtitle: todos[index].deadline != null
                         ? Text(
                             dateFormat
-                                .format(_todos[index].deadline!)
+                                .format(todos[index].deadline!)
                                 .toString(),
                             style: themeData.textTheme.bodyMedium,
                           )
@@ -188,10 +191,9 @@ class _TodoListPageState extends State<TodoListPage> {
   }
 
   BorderRadius _buildBorderRadius(int index, int length) {
-    // fix it
     const radius = Radius.circular(20);
 
-    if (_todos.length == 1) {
+    if (length == 1) {
       return const BorderRadius.all(radius);
     }
 
@@ -202,7 +204,7 @@ class _TodoListPageState extends State<TodoListPage> {
       );
     }
 
-    if (index == _todos.length - 1) {
+    if (index == length - 1) {
       return const BorderRadius.only(
         bottomRight: radius,
         bottomLeft: radius,
