@@ -2,29 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class TodoModel {
-  final String id;
+  final String? id;
   final String text;
   final DateTime? deadline;
   final bool done;
   final TextStyle? textStyle; // подумаю как реализовать по-другому
 
-  factory TodoModel.autoId({
-    required String text,
-    DateTime? deadline,
-    bool done = false,
-    TextStyle? textStyle,
-  }) {
-    return TodoModel(
-      id: const Uuid().v4(),
-      text: text,
-      deadline: deadline,
-      done: done,
-      textStyle: textStyle,
-    );
-  }
-
   TodoModel({
-    required this.id,
+    this.id,
     required this.text,
     this.deadline,
     this.done = false,
