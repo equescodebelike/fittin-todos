@@ -30,8 +30,4 @@ class TodoRepository {
   TodoModel? remove(TodoModel todoModel) {
     return _storage.remove(todoModel.id);
   }
-
-  void example() {
-    
-  }
 }
